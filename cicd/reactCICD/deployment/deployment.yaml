@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: reactcicd
-        image: gsemi/reactcicd:1a92b406e96976dd7d31ae984a58e7d47e68f72b
+        image: ashram939/reactcicd:1a92b406e96976dd7d31ae984a58e7d47e68f72b
         ports:
         - containerPort: 80
