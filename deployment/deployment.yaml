@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactcicd
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: reactcicd
+  template:
+    metadata:
+      labels:
+        app: reactcicd
+    spec:
+      containers:
+      - name: reactcicd
+        image: gsemi/reactcicd:1a92b406e96976dd7d31ae984a58e7d47e68f72b
+        ports:
+        - containerPort: 80
