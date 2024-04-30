@@ -43,4 +43,4 @@ spec:
               value: semifir
           ports:
             - containerPort: 3306
-              name: mysql
+              name: mariadb
