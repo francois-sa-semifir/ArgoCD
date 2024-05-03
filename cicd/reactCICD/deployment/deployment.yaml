@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: reactcicd
-        image: ashram939/reactcicd:e3e5a88f6a5ef838ebeba6b399459d51937e9745
+        image: ashram939/reactcicd:036c6423e79c8e2ffd44dc85eef14b319296435e
         ports:
         - containerPort: 80
