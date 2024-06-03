@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: dqnamandine/test-ci-cd-deployment 
+          tags: |
+            type=sha
+            type=ref,event=pr
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      -
+
+          name: Checkout code for the update      
+          uses: actions/checkout@v3      
+          with: 
+            ref: main
+      -
+
+        name: Update Deployment Image Tag      
+        run: |        
+          tag_to_use=$(echo "${{ steps.meta.outputs.tags }}" | head -n1 | awk -F ':' '{print $NF}')
+          sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/test-ci-cd-deployment:.*|${{ secrets.DOCKERHUB_USERNAME }}/test-ci-cd-deployment:$tag_to_use|g" ./pods/pod.yaml
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add .
+          git commit -am "Update image tag to $tag_to_use" || echo "No changes to commit"
+          git push origin main

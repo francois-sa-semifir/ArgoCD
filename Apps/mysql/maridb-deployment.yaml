@@ -44,3 +44,10 @@ spec:
           ports:
             - containerPort: 3306
               name: mariadb
+          resources:
+            requests:
+              memory: "24Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
